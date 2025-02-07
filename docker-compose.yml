@@ -1,4 +1,16 @@
 services:
+  database:
+    image: public.ecr.aws/docker/library/postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    expose:
+      - 5432
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+
   app:
     build: .
     volumes:
@@ -9,14 +21,6 @@ services:
     restart: unless-stopped
     env_file:
       - .env
-
-  database:
-    image: public.ecr.aws/docker/library/postgres:15
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    expose:
-      - 5432
-    restart: unless-stopped
 
 volumes:
   postgres_data:
